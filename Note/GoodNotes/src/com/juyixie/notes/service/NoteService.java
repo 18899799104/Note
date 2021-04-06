@@ -12,7 +12,8 @@ public class NoteService {
 		note.setId(id); 				//笔记的属性
 		note.setNickname(nickname);		//笔记的作者名
 		note.setTitle(title);			//笔记的标题
-		note.setText(content);			//笔记的内容
+		note.setText(content);			//笔记的内容	
+		note.setComment("评论区:");		//初始化评论区
 		return NoteUse.addNote(note);
 	}
 					//搜索笔记（根据作者或标题）
@@ -49,7 +50,16 @@ public class NoteService {
 	public static void changeNote(Note note) {
 		Show.changeShow(note);
 	}
+					//展示公告
 	public static void showAnnouncement() {
 		Show.showAnnouncement(NoteUse.showAnnouncement());
+	}
+					//添加评论
+	public static boolean discuss(Note note) {
+		return NoteUse.discuss(note);
+	}
+					//展示评论
+	public static String showComment(Note note) {
+		return NoteUse.showComment(note);
 	}
 }

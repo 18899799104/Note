@@ -1,5 +1,6 @@
 package com.juyixie.notes.service;
 
+import com.juyixie.notes.dao.NoteUse;
 import com.juyixie.notes.dao.UserUse;
 import com.juyixie.notes.entity.User;
 import com.juyixie.notes.view.Show;
@@ -33,4 +34,6 @@ public class UserService {
 		user.setPassword(password);
 		return UserUse.addUser(user);
 	}
+								
+	
 }

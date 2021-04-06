@@ -104,7 +104,15 @@ public class Show {
 	public static void contentShow(Note note) {
 		View.jsp.getViewport().removeAll();
 		JPanel jp = new JPanel();
+		JTextField jtf = new JTextField("输入评论");								//添加评论的输入框
+		JTextArea commentArea = new JTextArea(note.getComment(),7,30);			//评论区
+		commentArea.setEditable(false); 						
+		commentArea.setLineWrap(true);
+		JTextArea jta = new JTextArea(note.getText(),7,30);						//创建文本域放入笔记内容
+		jta.setEditable(false); 												//关闭文本域的输入仅进行文本展示
+		jta.setLineWrap(true);													//开启自动换行
 		JButton jb = new JButton("返回");
+		JButton discussButton = new JButton("评论");
 		JButton delete = new JButton("删除");
 		jb.addActionListener(new ActionListener()
         {
@@ -125,12 +133,23 @@ public class Show {
             	else JOptionPane.showMessageDialog(null,"删除失败!");
             }
         });
-		JTextArea jta = new JTextArea(note.getText(),7,30);	//创建文本域放入笔记内容
-		jta.setEditable(false); 						//关闭文本域的输入仅进行文本展示
-		jta.setLineWrap(true);							//开启自动换行
+		discussButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {	
+            	note.setComment(note.getComment()+"\n"+View.nickname+":"+jtf.getText());		//将评论框中的评论添加到这条笔记的评论区中
+            	NoteService.discuss(note);
+            	Show.contentShow(note);										//重置页面
+            	View.cl.show(View.cards, "New");
+            }
+        });
+		
 		jp.add(jb);
+		if(View.nickname!=null)jp.add(jtf);				//用户笔记专属
+		if(View.nickname!=null)jp.add(discussButton);	//用户笔记专属
 		if(View.nickname==null) jp.add(delete);			//管理员专属
 		jp.add(jta);
+		jp.add(commentArea);
 		View.jsp.getViewport().add(jp);
 		View.jsp.getViewport().revalidate();
 	}

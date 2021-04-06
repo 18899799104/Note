@@ -40,7 +40,7 @@ public class JButtonUtils {
 	
 		return button;
 	}
-	
+						//删除笔记功能的按钮
 	public static JButton getDeleteButton(Note note) {
 		JButton button = new JButton("删除");
 		button.addActionListener(new ActionListener()
@@ -57,6 +57,7 @@ public class JButtonUtils {
         });
 		return button;
 	}
+							//得到用户信息的按钮
 	public static JButton getUserButton(User user) {
 		JButton button = new JButton(user.getNickname());
 		button.addActionListener(new ActionListener()
@@ -68,6 +69,18 @@ public class JButtonUtils {
             }
         });
 		return button;
-		
+	}
+						//发布评论按钮
+	public static JButton addDiscussButton(Note note) {
+		JButton button = new JButton("评论");
+		button.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+            	NoteService.discuss(note);
+            	View.cl.show(View.cards, "New");
+            }
+        });	
+	return button;
 	}
 }

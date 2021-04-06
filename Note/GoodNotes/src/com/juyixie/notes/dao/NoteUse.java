@@ -14,7 +14,7 @@ public class NoteUse {
 	   写笔记  
 	  		  */
 	public static boolean addNote(Note note) {
-		String sql="insert into note values(?,?,?,?)";
+		String sql="insert into note values(?,?,?,?,?)";
 		PreparedStatement pstm = null;
 		Connection conn = null;
 		try {
@@ -24,6 +24,7 @@ public class NoteUse {
 			pstm.setString(2, note.getNickname());
 			pstm.setString(3,note.getTitle());
 			pstm.setString(4,note.getText());
+			pstm.setString(5, note.getComment());
 			if(pstm.executeUpdate()==0) return false;
 			else return true;
 		} catch (SQLException e) {
@@ -105,6 +106,7 @@ public class NoteUse {
 				note1.setNickname(rs.getString(2));
 				note1.setTitle(rs.getString(3));
 				note1.setText(rs.getString(4));
+				note1.setComment(rs.getString(5));
 				noteSet.add(note1);
 			}
 			return noteSet;
@@ -136,6 +138,7 @@ public class NoteUse {
 				note1.setNickname(rs.getString(2));
 				note1.setTitle(rs.getString(3));
 				note1.setText(rs.getString(4));
+				note1.setComment(rs.getString(5));
 				noteSet.add(note1);
 			}
 			return noteSet;
@@ -167,6 +170,7 @@ public class NoteUse {
 				note1.setNickname(rs.getString(2));
 				note1.setTitle(rs.getString(3));
 				note1.setText(rs.getString(4));
+				note1.setComment(rs.getString(5));
 				noteSet.add(note1);
 			}
 			return noteSet;
@@ -198,6 +202,7 @@ public class NoteUse {
 				note.setNickname(rs.getString(2));
 				note.setTitle(rs.getString(3));
 				note.setText(rs.getString(4));
+				note.setComment(rs.getString(5));
 			}
 			return note;
 		} catch (SQLException e) {
@@ -225,6 +230,7 @@ public class NoteUse {
 				note1.setNickname(rs.getString(2));
 				note1.setTitle(rs.getString(3));
 				note1.setText(rs.getString(4));
+				note1.setComment(rs.getString(5));
 				noteSet.add(note1);
 			}
 			return noteSet;
@@ -238,7 +244,7 @@ public class NoteUse {
 	}
 									//查看公告
 	public static HashSet<Note> showAnnouncement(){
-		String sql="select * from note where id=2";
+		String sql = "select * from note where id=2";
 		PreparedStatement pstm = null;
 		Connection conn = null;
 		ResultSet rs=null;
@@ -264,6 +270,44 @@ public class NoteUse {
 		}
 		return noteSet;
 	}
-
-
+									//添加评论
+	public static boolean discuss(Note note) {
+		String sql = "update note set comment=? where nickname=? and title=?";
+		PreparedStatement pstm = null;
+		Connection conn = null;
+		ResultSet rs=null;
+		try {
+			conn = JDBCUtils.getConnection();
+			pstm = conn.prepareStatement(sql);
+			pstm.setString(1, note.getComment());
+			pstm.setString(2, note.getNickname());
+			pstm.setString(3, note.getTitle());
+			if(pstm.executeUpdate()!=0) return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JDBCUtils.close(rs, pstm, conn);
+		}
+		return false;
+	}
+									//查看评论
+	public static String showComment(Note note) {
+		String sql="select * from note where nickname=? and title=?";
+		PreparedStatement pstm = null;
+		Connection conn = null;
+		ResultSet rs=null;
+		try {
+			conn = JDBCUtils.getConnection();
+			pstm = conn.prepareStatement(sql);
+			pstm.setString(1, note.getNickname());
+			pstm.setString(2, note.getTitle());
+			rs = pstm.executeQuery();
+			return rs.getString(5);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCUtils.close(rs, pstm, conn);
+		}
+		return "";
+	}
 }
